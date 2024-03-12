@@ -5,18 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
 </head>
-{% if session %}
 <script>
   window.intercomSettings = {
     api_base: "https://api-iam.intercom.io",
     app_id: "q31c9qnr",
-    name: "{{ session['user']['userinfo']['name'] }}",
-    email: "{{ session.user.userinfo.email }}",
-    created_at: "{{ session['user']['userinfo']['updated_at'] | to_unix_time }}",
-    user_hash: "{{ user_hash }}"
+    // Static company information
+    company: {
+      id: "NumFOCUS", // Use an appropriate company ID if available
+      name: "NumFOCUS"
+    }
   };
+
+  {% if session %}
+    window.intercomSettings.name = "{{ session['user']['userinfo']['name'] }}";
+    window.intercomSettings.email = "{{ session.user.userinfo.email }}";
+    window.intercomSettings.created_at = "{{ session['user']['userinfo']['updated_at'] | to_unix_time }}";
+    window.intercomSettings.user_hash = "{{ user_hash }}";
+  {% endif %}
 </script>
-{% endif %}
+
 
   <script>
     (function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',w.intercomSettings);}else{var d=document;var i=function(){i.c(arguments);};i.q=[];i.c=function(args){i.q.push(args);};w.Intercom=i;var l=function(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/q31c9qnr';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);};if(document.readyState==='complete'){l();}else if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();
@@ -29,7 +36,10 @@
         <p>Email: {{ session['user']['userinfo']['email'] }}</p>
         <p>Last Updated: {{ session['user']['userinfo']['updated_at'] |to_unix_time }}</p>
         <!-- Other user details can be added here -->
+        <p><a href="https://help.osscif.org/en/tickets-portal">Tickets Portal</a></p>
+        <p><a href="https://help.osscif.org">Help Center</a></p>
         <p><a href="/logout">Logout</a></p>
+        
     {% else %}
         <h1>Welcome Guest!</h1>
         <p><a href="/login">Login</a></p>
